@@ -1,0 +1,280 @@
+#include "vector.h"
+
+int crearVector(Vector* vec, size_t tamElemento)
+{
+    vec->datos = malloc(TAM_BASE * tamElemento);
+
+    if (!vec->datos)
+    {
+        return 0;
+    }
+
+    vec->ce = 0;
+    vec->tamMaximo = TAM_BASE;
+    vec->tamElemento = tamElemento;
+
+    return 1;
+}
+
+int redimensionarVector(Vector* vec, size_t nuevaCantidadElementos)
+{
+    void* nuevaMemoria = realloc(vec->datos, nuevaCantidadElementos * vec->tamElemento);
+
+    if (!nuevaMemoria)
+    {
+        return 0;
+    }
+
+    vec->datos = nuevaMemoria;
+    vec->tamMaximo = nuevaCantidadElementos;
+
+    return 1;
+}
+
+int modificarElementoVector(Vector* vec, size_t posicion, void* nuevoElemento)
+{
+    if (posicion >= vec->ce)
+    {
+        return 0;
+    }
+
+    void* destino = (char*)vec->datos + (posicion * vec->tamElemento);
+
+    copiarMemoria(destino, nuevoElemento, vec->tamElemento);
+
+    return 1;
+}
+
+void recorrerVector(Vector* vec, void (*funcion)(void* elemento))
+{
+    void* elementoActual = vec->datos;
+    size_t i;
+
+    for (i = 0; i < vec->ce; i++)
+    {
+        funcion(elementoActual);
+        elementoActual = (char*)elementoActual + vec->tamElemento;
+    }
+}
+
+void destruirVector(Vector* vec)
+{
+    free(vec->datos);
+
+    vec->ce = 0;
+    vec->tamMaximo = 0;
+    vec->tamElemento = 0;
+}
+
+int insertarEnVectorAlFinal(Vector* vec, void* elemento)
+{
+    if (vec->ce == vec->tamMaximo)
+    {
+        if (!redimensionarVector(vec, vec->tamMaximo + TAM_BASE))
+        {
+            return 0;
+        }
+    }
+
+    void* destino = (char*)vec->datos + (vec->ce * vec->tamElemento);
+
+    copiarMemoria(destino, elemento, vec->tamElemento);
+
+    vec->ce++;
+
+    return 1;
+}
+
+int insertarEnVectorPorPosicion(Vector* vec, size_t posicion, void* elemento)
+{
+    if (posicion > vec->ce)
+    {
+        return 0;
+    }
+
+    if (posicion == vec->ce)
+    {
+        return insertarEnVectorAlFinal(vec, elemento);
+    }
+
+    if (vec->ce == vec->tamMaximo)
+    {
+        if (!redimensionarVector(vec, vec->tamMaximo + TAM_BASE))
+        {
+            return 0;
+        }
+    }
+
+    void* ini = (char*)vec->datos + (posicion * vec->tamElemento);
+    void* fin = (char*)vec->datos + (vec->ce * vec->tamElemento);
+
+    while (ini < fin)
+    {
+        copiarMemoria(fin, (char*)fin - vec->tamElemento, vec->tamElemento);
+
+        fin -= vec->tamElemento;
+    }
+
+    copiarMemoria(ini, elemento, vec->tamElemento);
+    vec->ce++;
+
+    return 1;
+}
+
+int insertarEnVectorOrdenado(Vector* vec, void* elemento, int (*cmp)(const void* a, const void* b))
+{
+    if (vec->ce == vec->tamMaximo)
+    {
+        if (!redimensionarVector(vec, vec->tamMaximo + TAM_BASE))
+        {
+            return 0;
+        }
+    }
+
+    void* ini = (char*)vec->datos;
+    void* fin = (char*)vec->datos + (vec->ce * vec->tamElemento);
+
+    while (ini < fin && cmp(elemento, (char*)fin - vec->tamElemento) == 1)
+    {
+        copiarMemoria(fin, (char*)fin - vec->tamElemento, vec->tamElemento);
+
+        fin -= vec->tamElemento;
+    }
+
+    copiarMemoria(fin, elemento, vec->tamElemento);
+    vec->ce++;
+
+    return 1;
+}
+
+int eliminarElementoEnVectorPorPosicion(Vector* vec, size_t posicion)
+{
+    if (posicion >= vec->ce)
+    {
+        return 0;
+    }
+
+    void* ini = (char*)vec->datos + (posicion * vec->tamElemento);
+    void* fin = (char*)vec->datos + ((vec->ce - 1) * vec->tamElemento);
+
+    while (ini < fin)
+    {
+        copiarMemoria(ini, (char*)ini + vec->tamElemento, vec->tamElemento);
+
+        ini += vec->tamElemento;
+    }
+
+    vec->ce--;
+
+    return 1;
+}
+
+int eliminarPrimeraAparicionElementoEnVector(Vector* vec, void* elemento)
+{
+    void* ini = (char*)vec->datos;
+    void* fin = (char*)vec->datos + ((vec->ce - 1) * vec->tamElemento);
+    int encontrado = 0;
+
+    while (ini < fin && encontrado == 0)
+    {
+        if (compararMemoria(ini, elemento, vec->tamElemento) == 0)
+        {
+            encontrado = 1;
+        }
+        else
+        {
+            ini += vec->tamElemento;
+        }
+    }
+
+    if (encontrado == 0)
+    {
+        return 0;
+    }
+
+    while (ini < fin)
+    {
+        copiarMemoria(ini, (char*)ini + vec->tamElemento, vec->tamElemento);
+
+        ini += vec->tamElemento;
+    }
+
+    vec->ce--;
+
+    return 1;
+}
+
+int ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void *a, const void *b))
+{
+    Vector vecAux = *vec;
+    void* fin = (char*)vec->datos + ((vec->ce - 1) * vec->tamElemento);
+
+    while ((char*)vecAux.datos < fin)
+    {
+
+    }
+}
+
+void*
+
+void* copiarMemoria(void* destino, void* origen, size_t cantidad)
+{
+    if (cantidad <= 0)
+    {
+        return destino;
+    }
+
+    unsigned char* pDestino = (unsigned char*) destino;
+    unsigned char* pOrigen = (unsigned char*) origen;
+
+    while (cantidad > 0)
+    {
+        *pDestino = *pOrigen;
+
+        pDestino++;
+        pOrigen++;
+
+        cantidad--;
+    }
+
+    return pDestino;
+}
+
+int compararMemoria(const void* memoria1, const void* memoria2, size_t cantidad)
+{
+    if (cantidad == 0)
+    {
+        return 0;
+    }
+
+    unsigned char* pMemoria1 = (unsigned char*) memoria1;
+    unsigned char* pMemoria2 = (unsigned char*) memoria2;
+
+    while (cantidad > 0 && *pMemoria1 == *pMemoria2)
+    {
+        pMemoria1++;
+        pMemoria2++;
+
+        cantidad--;
+    }
+
+    return cantidad == 0 ? 0 : *pMemoria1 - *pMemoria2;
+}
+
+int intercambiarMemoria(void* memoria1, void* memoria2, size_t cantidad)
+{
+    void* aux = malloc(cantidad);
+
+    if (aux == NULL)
+    {
+        return 0;
+    }
+
+    copiarMemoria(aux, memoria1, cantidad);
+    copiarMemoria(memoria1, memoria2, cantidad);
+    copiarMemoria(memoria2, aux, cantidad);
+
+    free(aux);
+
+    return 1;
+}

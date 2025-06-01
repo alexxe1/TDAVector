@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1748308168 source:d:\projects\c_projects\unlam\topicos\vector\main.c
+	<stdio.h>
+	"vector.h"
+
+1748309598 d:\projects\c_projects\unlam\topicos\vector\vector.h
+	<stdlib.h>
+
+1748309582 source:d:\projects\c_projects\unlam\topicos\vector\vector.c
+	"vector.h"
+

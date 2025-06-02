@@ -204,18 +204,48 @@ int eliminarPrimeraAparicionElementoEnVector(Vector* vec, void* elemento)
     return 1;
 }
 
-int ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void *a, const void *b))
+int ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void* a, const void* b))
 {
     Vector vecAux = *vec;
-    void* fin = (char*)vec->datos + ((vec->ce - 1) * vec->tamElemento);
+    void* ini = (char*)vec->datos;
+    const void* fin = (char*)vec->datos + ((vec->ce - 1) * vec->tamElemento);
+    void* actual;
 
-    while ((char*)vecAux.datos < fin)
+    while (ini < fin)
     {
+        actual = obtenerMinimo(&vecAux, comparar);
 
+        if (compararMemoria(ini, actual, vec->tamElemento) != 0)
+        {
+            intercambiarMemoria(ini, actual, vec->tamElemento);
+        }
+
+        ini += vec->tamElemento;
+        vecAux.datos = (char*)vecAux.datos + vecAux.tamElemento;
+        vecAux.ce--;
     }
+
+    return 1;
 }
 
-void*
+void* obtenerMinimo(Vector* vec, int (*comparar)(const void* a, const void* b))
+{
+    void* minimo = vec->datos;
+    size_t i = 0;
+    void* actual;
+
+    for (i = 1; i < vec->ce; i++)
+    {
+        actual = (char*)vec->datos + i * vec->tamElemento;
+
+        if (comparar(actual, minimo) < 0)
+        {
+            minimo = actual;
+        }
+    }
+
+    return minimo;
+}
 
 void* copiarMemoria(void* destino, void* origen, size_t cantidad)
 {
@@ -224,8 +254,8 @@ void* copiarMemoria(void* destino, void* origen, size_t cantidad)
         return destino;
     }
 
-    unsigned char* pDestino = (unsigned char*) destino;
-    unsigned char* pOrigen = (unsigned char*) origen;
+    unsigned char* pDestino = (unsigned char*)destino;
+    unsigned char* pOrigen = (unsigned char*)origen;
 
     while (cantidad > 0)
     {
@@ -247,8 +277,8 @@ int compararMemoria(const void* memoria1, const void* memoria2, size_t cantidad)
         return 0;
     }
 
-    unsigned char* pMemoria1 = (unsigned char*) memoria1;
-    unsigned char* pMemoria2 = (unsigned char*) memoria2;
+    unsigned char* pMemoria1 = (unsigned char*)memoria1;
+    unsigned char* pMemoria2 = (unsigned char*)memoria2;
 
     while (cantidad > 0 && *pMemoria1 == *pMemoria2)
     {

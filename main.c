@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include "vector.h"
 
 void mostrarEntero(void* elemento)
@@ -8,35 +9,35 @@ void mostrarEntero(void* elemento)
 
 int esMenor(const void* a, const void* b)
 {
-    return *(int*)a < *(int*)b;
+    return (*(int*)a - *(int*)b);
+}
+
+int obtenerNumeroAleatorio()
+{
+    int numero = (rand() % 10) + 1;
+
+    return numero;
 }
 
 int main()
 {
     Vector vec;
-    int i;
-    int numeros[] = {1, 4, 7};
+    srand(time(NULL));
 
     crearVector(&vec, sizeof(int));
 
-    for (i = 1; i < 10; i++)
+    for (int i = 0; i < 7; i++)
     {
-        insertarEnVectorAlFinal(&vec, &i);
-    }
+        int n = obtenerNumeroAleatorio();
 
-    insertarEnVectorPorPosicion(&vec, 1, &numeros[0]);
-    insertarEnVectorPorPosicion(&vec, 1, &numeros[0]);
-    insertarEnVectorPorPosicion(&vec, 5, &numeros[1]);
-    insertarEnVectorPorPosicion(&vec, 6, &numeros[1]);
-    insertarEnVectorPorPosicion(&vec, 8, &numeros[2]);
+        insertarEnVectorAlFinal(&vec, &n);
+    }
 
     recorrerVector(&vec, mostrarEntero);
 
     puts("");
 
-    eliminarPrimeraAparicionElementoEnVector(&vec, &numeros[0]);
-    eliminarPrimeraAparicionElementoEnVector(&vec, &numeros[1]);
-    eliminarPrimeraAparicionElementoEnVector(&vec, &numeros[2]);
+    ordenarVectorPorSeleccion(&vec, esMenor);
 
     recorrerVector(&vec, mostrarEntero);
 

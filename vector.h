@@ -27,10 +27,11 @@ int insertarEnVectorOrdenado(Vector* vec, void* elemento, int (*cmp)(const void*
 int eliminarElementoEnVectorPorPosicion(Vector* vec, size_t posicion);
 int eliminarPrimeraAparicionElementoEnVector(Vector* vec, void* elemento);
 
-int ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void *a, const void *b));
+int ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void* a, const void* b));
+void* obtenerMinimo(Vector* vec, int (*comparar)(const void* a, const void* b));
 
 void* copiarMemoria(void* destino, void* origen, size_t cantidad);
 int compararMemoria(const void* memoria1, const void* memoria2, size_t cantidad);
-void intercambiarMemoria(void* memoria1, void* memoria2, size_t cantidad);
+int intercambiarMemoria(void* memoria1, void* memoria2, size_t cantidad);
 
-#endif // VECTOR_H_INCLUDED
+#endif  // VECTOR_H_INCLUDED

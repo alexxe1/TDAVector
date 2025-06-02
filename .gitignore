@@ -3,6 +3,7 @@
 *.exe
 *.layout
 *.depend
+*.sh
 
 # Carpetas generadas por Code::Blocks
 bin/

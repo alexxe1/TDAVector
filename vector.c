@@ -134,7 +134,7 @@ int insertarEnVectorOrdenado(Vector* vec, void* elemento, int (*cmp)(const void*
     void* ini = (char*)vec->datos;
     void* fin = (char*)vec->datos + (vec->ce * vec->tamElemento);
 
-    while (ini < fin && cmp(elemento, (char*)fin - vec->tamElemento) == 1)
+    while (ini < fin && cmp(elemento, (char*)fin - vec->tamElemento) > 0)
     {
         copiarMemoria(fin, (char*)fin - vec->tamElemento, vec->tamElemento);
 
@@ -172,7 +172,7 @@ int eliminarElementoEnVectorPorPosicion(Vector* vec, size_t posicion)
 int eliminarPrimeraAparicionElementoEnVector(Vector* vec, void* elemento)
 {
     void* ini = (char*)vec->datos;
-    void* fin = (char*)vec->datos + ((vec->ce - 1) * vec->tamElemento);
+    void* fin = (char*)vec->datos + vec->ce * vec->tamElemento;
     int encontrado = 0;
 
     while (ini < fin && encontrado == 0)
@@ -286,11 +286,48 @@ void* reducirVector(Vector* vec, void* (*funcion)(void* a, void* b))
     return acumulador;
 }
 
+void* busquedaBinariaVector(Vector* vec, void* elemento, int (*comparar)(const void* a, const void* b))
+{
+    if (vec->ce == 0)
+    {
+        return NULL;
+    }
+
+    char* ini = (char*)vec->datos;
+    char* fin = (char*)vec->datos + (vec->ce - 1) * vec->tamElemento;
+    size_t numElementos;
+    char* medio;
+    int comparacion;
+
+    while (ini <= fin)
+    {
+        numElementos = (fin - ini) / vec->tamElemento;
+        medio = ini + (numElementos / 2) * vec->tamElemento;
+
+        comparacion = comparar(medio, elemento);
+
+        if (comparacion == 0)
+        {
+            return medio;
+        }
+        else if (comparacion < 0)
+        {
+            ini = medio + vec->tamElemento;
+        }
+        else
+        {
+            fin = medio - vec->tamElemento;
+        }
+    }
+
+    return NULL;
+}
+
 void* copiarMemoria(void* destino, void* origen, size_t cantidad)
 {
-    if (cantidad <= 0)
+    if (cantidad == 0)
     {
-        return destino;
+        return 0;
     }
 
     unsigned char* pDestino = (unsigned char*)destino;

@@ -31,6 +31,7 @@ void ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void* a, const
 void* obtenerMinimo(Vector* vec, int (*comparar)(const void* a, const void* b));
 void filtrarVector(Vector* vec, int (*comparar)(const void* a));
 void* reducirVector(Vector* vec, void* (*funcion)(void* a, void* b));
+void* busquedaBinariaVector(Vector* vec, void* elemento, int (*comparar)(const void* a, const void* b));
 
 void* copiarMemoria(void* destino, void* origen, size_t cantidad);
 int compararMemoria(const void* memoria1, const void* memoria2, size_t cantidad);

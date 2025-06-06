@@ -33,10 +33,16 @@ int obtenerNumeroAleatorio()
     return numero;
 }
 
+int compararEnteros(const void* a, const void* b)
+{
+    return *(int*)a - *(int*)b;
+}
+
 int main()
 {
     Vector vec;
     srand(time(NULL));
+    int buscar = 4;
 
     crearVector(&vec, sizeof(int));
 
@@ -47,11 +53,15 @@ int main()
         insertarEnVectorAlFinal(&vec, &n);
     }
 
+    ordenarVectorPorSeleccion(&vec, esMenor);
     recorrerVector(&vec, mostrarEntero);
 
     puts("");
 
-    reducirVector(&vec, sumarEnteros);
+    int* encontro = (int*)busquedaBinariaVector(&vec, &buscar, compararEnteros);
+
+    if (encontro != NULL)
+        printf("\nENCONTRADO: %d", *encontro);
 
     destruirVector(&vec);
 

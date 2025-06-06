@@ -4,6 +4,8 @@
 *.layout
 *.depend
 *.sh
+main.c
+programa
 
 # Carpetas generadas por Code::Blocks
 bin/

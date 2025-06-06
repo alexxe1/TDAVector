@@ -12,6 +12,20 @@ int esMenor(const void* a, const void* b)
     return (*(int*)a - *(int*)b);
 }
 
+int esPar(const void* a)
+{
+    return *(int*)a % 2 == 0 ? 1 : 0;
+}
+
+void* sumarEnteros(void* a, void* b)
+{
+    int* resultado = malloc(sizeof(int));
+
+    *resultado = *(int*)a + *(int*)b;
+
+    return resultado;
+}
+
 int obtenerNumeroAleatorio()
 {
     int numero = (rand() % 10) + 1;
@@ -37,9 +51,7 @@ int main()
 
     puts("");
 
-    ordenarVectorPorSeleccion(&vec, esMenor);
-
-    recorrerVector(&vec, mostrarEntero);
+    reducirVector(&vec, sumarEnteros);
 
     destruirVector(&vec);
 

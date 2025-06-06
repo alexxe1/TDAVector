@@ -204,7 +204,7 @@ int eliminarPrimeraAparicionElementoEnVector(Vector* vec, void* elemento)
     return 1;
 }
 
-int ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void* a, const void* b))
+void ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void* a, const void* b))
 {
     Vector vecAux = *vec;
     void* ini = (char*)vec->datos;
@@ -224,8 +224,6 @@ int ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void* a, const 
         vecAux.datos = (char*)vecAux.datos + vecAux.tamElemento;
         vecAux.ce--;
     }
-
-    return 1;
 }
 
 void* obtenerMinimo(Vector* vec, int (*comparar)(const void* a, const void* b))
@@ -245,6 +243,47 @@ void* obtenerMinimo(Vector* vec, int (*comparar)(const void* a, const void* b))
     }
 
     return minimo;
+}
+
+void filtrarVector(Vector* vec, int (*comparar)(const void* a))
+{
+    void* lectura = (char*)vec->datos;
+    void* escritura = (char*)vec->datos;
+    void* fin = (char*)vec->datos + (vec->ce * vec->tamElemento);
+
+    while (lectura < fin)
+    {
+        if (comparar(lectura) == 1)
+        {
+            if (lectura != escritura)
+            {
+                copiarMemoria(escritura, lectura, vec->tamElemento);
+            }
+
+            escritura += vec->tamElemento;
+        }
+        else
+        {
+            vec->ce--;
+        }
+
+        lectura += vec->tamElemento;
+    }
+}
+
+void* reducirVector(Vector* vec, void* (*funcion)(void* a, void* b))
+{
+    void* ini = (char*)vec->datos;
+    void* fin = (char*)vec->datos + (vec->ce * vec->tamElemento);
+    void* acumulador = vec->datos;
+
+    while (ini < fin)
+    {
+        acumulador = funcion(acumulador, ini);
+        ini += vec->tamElemento;
+    }
+
+    return acumulador;
 }
 
 void* copiarMemoria(void* destino, void* origen, size_t cantidad)

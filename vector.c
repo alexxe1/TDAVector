@@ -204,6 +204,37 @@ int eliminarPrimeraAparicionElementoEnVector(Vector* vec, void* elemento)
     return 1;
 }
 
+int eliminarTodasAparicionesElementoEnVector(Vector* vec, void* elemento)
+{
+    void* lectura = (char*)vec->datos;
+    void* escritura = (char*)vec->datos;
+    void* fin = (char*)vec->datos + ((vec->ce) * vec->tamElemento);
+    int borrados = 0;
+
+    while (lectura < fin)
+    {
+        if (compararMemoria(lectura, elemento, vec->tamElemento) == 0)
+        {
+            borrados++;
+        }
+        else
+        {
+            if (lectura != escritura)
+            {
+                copiarMemoria(escritura, lectura, vec->tamElemento);
+            }
+
+            escritura += vec->tamElemento;
+        }
+
+        lectura += vec->tamElemento;
+    }
+
+    vec->ce -= borrados;
+
+    return borrados;
+}
+
 void ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void* a, const void* b))
 {
     Vector vecAux = *vec;

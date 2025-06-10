@@ -26,6 +26,7 @@ int insertarEnVectorOrdenado(Vector* vec, void* elemento, int (*cmp)(const void*
 
 int eliminarElementoEnVectorPorPosicion(Vector* vec, size_t posicion);
 int eliminarPrimeraAparicionElementoEnVector(Vector* vec, void* elemento);
+int eliminarTodasAparicionesElementoEnVector(Vector* vec, void* elemento);
 
 void ordenarVectorPorSeleccion(Vector* vec, int (*comparar)(const void* a, const void* b));
 void* obtenerMinimo(Vector* vec, int (*comparar)(const void* a, const void* b));
